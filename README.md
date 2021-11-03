@@ -1,2 +1,1 @@
-# ParaPanoStitch
-Parallel Panorama Stitching
+# Parallel_PanoramaStitch
