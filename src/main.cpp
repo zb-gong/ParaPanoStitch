@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
     Mat output;
     warpPerspective(image1, output, Homo, Size(image1.size[1] + image2.size[1], image1.size[0]));
     image2.copyTo(output.rowRange(0,image2.size[0]).colRange(0, image2.size[1]));
-    imshow("po", output);
+    imshow("p6", output);
 
     waitKey(0);
     return 0;
