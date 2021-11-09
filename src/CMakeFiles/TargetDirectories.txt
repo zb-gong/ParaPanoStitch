@@ -1,0 +1,3 @@
+/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/CMakeFiles/rebuild_cache.dir
+/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/CMakeFiles/edit_cache.dir
+/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/CMakeFiles/opencvTest.dir

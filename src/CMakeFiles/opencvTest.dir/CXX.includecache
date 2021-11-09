@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/main.cpp
+cstdio
+-
+cstdlib
+-
+cstring
+-
+iostream
+-
+vector
+-
+opencv2/opencv.hpp
+-
+opencv2/xfeatures2d.hpp
+-
+
