@@ -4,7 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/main.cpp" "/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/CMakeFiles/opencvTest.dir/main.cpp.o"
+  "/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/main.cpp" "/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/build/CMakeFiles/pps.dir/src/main.cpp.o"
+  "/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/util.cpp" "/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/build/CMakeFiles/pps.dir/src/util.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

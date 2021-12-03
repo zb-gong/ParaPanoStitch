@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src
+CMAKE_SOURCE_DIR = /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src
+CMAKE_BINARY_DIR = /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/CMakeFiles /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/build/CMakeFiles /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,44 +111,71 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named opencvTest
+# Target rules for targets named pps
 
 # Build rule for target.
-opencvTest: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 opencvTest
-.PHONY : opencvTest
+pps: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 pps
+.PHONY : pps
 
 # fast build rule for target.
-opencvTest/fast:
-	$(MAKE) -f CMakeFiles/opencvTest.dir/build.make CMakeFiles/opencvTest.dir/build
-.PHONY : opencvTest/fast
+pps/fast:
+	$(MAKE) -f CMakeFiles/pps.dir/build.make CMakeFiles/pps.dir/build
+.PHONY : pps/fast
 
-main.o: main.cpp.o
+src/main.o: src/main.cpp.o
 
-.PHONY : main.o
+.PHONY : src/main.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/opencvTest.dir/build.make CMakeFiles/opencvTest.dir/main.cpp.o
-.PHONY : main.cpp.o
+src/main.cpp.o:
+	$(MAKE) -f CMakeFiles/pps.dir/build.make CMakeFiles/pps.dir/src/main.cpp.o
+.PHONY : src/main.cpp.o
 
-main.i: main.cpp.i
+src/main.i: src/main.cpp.i
 
-.PHONY : main.i
+.PHONY : src/main.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/opencvTest.dir/build.make CMakeFiles/opencvTest.dir/main.cpp.i
-.PHONY : main.cpp.i
+src/main.cpp.i:
+	$(MAKE) -f CMakeFiles/pps.dir/build.make CMakeFiles/pps.dir/src/main.cpp.i
+.PHONY : src/main.cpp.i
 
-main.s: main.cpp.s
+src/main.s: src/main.cpp.s
 
-.PHONY : main.s
+.PHONY : src/main.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/opencvTest.dir/build.make CMakeFiles/opencvTest.dir/main.cpp.s
-.PHONY : main.cpp.s
+src/main.cpp.s:
+	$(MAKE) -f CMakeFiles/pps.dir/build.make CMakeFiles/pps.dir/src/main.cpp.s
+.PHONY : src/main.cpp.s
+
+src/util.o: src/util.cpp.o
+
+.PHONY : src/util.o
+
+# target to build an object file
+src/util.cpp.o:
+	$(MAKE) -f CMakeFiles/pps.dir/build.make CMakeFiles/pps.dir/src/util.cpp.o
+.PHONY : src/util.cpp.o
+
+src/util.i: src/util.cpp.i
+
+.PHONY : src/util.i
+
+# target to preprocess a source file
+src/util.cpp.i:
+	$(MAKE) -f CMakeFiles/pps.dir/build.make CMakeFiles/pps.dir/src/util.cpp.i
+.PHONY : src/util.cpp.i
+
+src/util.s: src/util.cpp.s
+
+.PHONY : src/util.s
+
+# target to generate assembly for a file
+src/util.cpp.s:
+	$(MAKE) -f CMakeFiles/pps.dir/build.make CMakeFiles/pps.dir/src/util.cpp.s
+.PHONY : src/util.cpp.s
 
 # Help Target
 help:
@@ -158,10 +185,13 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... opencvTest"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... pps"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
+	@echo "... src/util.o"
+	@echo "... src/util.i"
+	@echo "... src/util.s"
 .PHONY : help
 
 

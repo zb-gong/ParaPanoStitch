@@ -1,4 +1,4 @@
-# Install script for directory: /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src
+# Install script for directory: /home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
