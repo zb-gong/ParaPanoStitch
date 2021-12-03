@@ -17,6 +17,52 @@ using namespace std;
 #define PI 3.1415926535897932384626433832795
 #define MAX_DOUBLE 99999.0
 
+// void unpackOctave(const KeyPoint& kpt, int& octave, int& layer, float& scale) {
+//     octave = kpt.octave & 255;
+//     layer = (kpt.octave >> 8) & 255;
+//     octave = octave < 128 ? octave : (-128 | octave);
+//     scale = octave >= 0 ? 1.f/(1 << octave) : (float)(1 << -octave);
+// }
+
+// vector<float> CreateHistogram (vector<float>& orientations,vector<float>& magnitudes) {
+//     vector<float> bins(8, 0);
+//     for (int i=0; i<orientations.size(); i++) {
+//         int index = std::floor(orientations[i] / 45);
+//         index = index % 7;
+//         bins[index] += magnitudes[i];
+//     }
+//     return bins;
+// }
+
+// void CalcSIFTDescriptor(Mat &image, Point2f &ptf, float angle, float rad, Mat &descriptor) {
+//     Point pt(cvRound(ptf.x), cvRound(ptf.y));
+//     float cos_t = cosf(angle*(float)(CV_PI/180));
+//     float sin_t = sinf(angle*(float)(CV_PI/180));
+//     float bins_per_rad = SIFT_BIN / 360.f;
+//     float exp_scale = -1.f/(SIFT_WIDTH * SIFT_WIDTH * 0.5f);
+//     float hist_width = 3 * rad;
+//     int radius = cvRound(hist_width * 1.4142135623730951f * (SIFT_WIDTH + 1) * 0.5f);
+//     cout << "cost_t:" << cos_t << "sin_t:" << sin_t << "bins_per_rad:" << bins_per_rad << "exp_scale:" << exp_scale << "hist_width:" << hist_width << "radius" << radius << endl;
+// }
+// void CalcDescriptor(Mat &image, vector<KeyPoint> &key, Mat &descriptor) {
+//     // for (int i=0; i<key.size(); i++) {
+//     int octave, layer;
+//     float scale;
+//     KeyPoint k = key[0];
+//     unpackOctave(k, octave, layer, scale); // 2^octava * scale = 1
+//     if (layer!= 3)
+//     cout << "ocvate:" << octave << " layer:" << layer << " scale" << scale << endl;
+//     // cout << "keypoints size:" << k.size << endl;
+//     float size = k.size * scale; // diameter of the interesting area
+//     Point2f ptf(k.pt.x*scale, k.pt.y*scale);
+//     // pyramid added here 
+
+//     float angle = 360.f - k.angle;
+//     cout << "angle:" << angle << endl;
+//     CalcSIFTDescriptor(image, ptf, angle, size*0.5, descriptor);
+//     // }
+// }
+
 void CalcDescriptor(Mat &image, vector<Point2f> &key, Mat &descriptor) {
     double hist[16][8];
     int post_index, orient_index;
