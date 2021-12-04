@@ -2,12 +2,18 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+<<<<<<< HEAD
 #include <vector>
 #include <chrono>
 #include <opencv2/opencv.hpp>
 #include <opencv2/xfeatures2d.hpp>
 #include <omp.h>
 // #include "util.h"
+=======
+#include <opencv2/opencv.hpp>
+#include <opencv2/xfeatures2d.hpp>
+#include <vector>
+>>>>>>> fb95a16c8567d13a1a0225a4a15ae143fdf75c89
 
 using namespace cv;
 using namespace std;
