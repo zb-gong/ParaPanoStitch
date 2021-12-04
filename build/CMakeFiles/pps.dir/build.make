@@ -140,6 +140,8 @@ pps: /usr/local/lib/libopencv_flann.so.3.4.16
 pps: /usr/local/lib/libopencv_photo.so.3.4.16
 pps: /usr/local/lib/libopencv_imgproc.so.3.4.16
 pps: /usr/local/lib/libopencv_core.so.3.4.16
+pps: /usr/lib/gcc/x86_64-linux-gnu/9/libgomp.so
+pps: /usr/lib/x86_64-linux-gnu/libpthread.so
 pps: CMakeFiles/pps.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable pps"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pps.dir/link.txt --verbose=$(VERBOSE)
