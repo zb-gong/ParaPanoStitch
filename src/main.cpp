@@ -27,9 +27,9 @@ int main(int argc, char *argv[]) {
 
 	auto start_time = Clock::now();
 	Mat image1_color = imread("/home/zibo/Pictures/pic1.png", IMREAD_COLOR);
-	Mat image2_color = imread("/home/zibo/Pictures/pic2.png", IMREAD_COLOR);
+	Mat image2_color = imread("/home/zibo/Pictures/pic3.png", IMREAD_COLOR);
 	Mat image1_gray = imread("/home/zibo/Pictures/pic1.png", IMREAD_GRAYSCALE);
-	Mat image2_gray = imread("/home/zibo/Pictures/pic2.png", IMREAD_GRAYSCALE);
+	Mat image2_gray = imread("/home/zibo/Pictures/pic3.png", IMREAD_GRAYSCALE);
 	Mat image1, image2;
 	image1_gray.convertTo(image1, CV_32F, 1.0 / 255, 0);
 	image2_gray.convertTo(image2, CV_32F, 1.0 / 255, 0);
@@ -46,18 +46,18 @@ int main(int argc, char *argv[]) {
 	auto ck1_time = Clock::now();
 	cout << "whole detect time spent:" << chrono::duration_cast<dsec>(ck1_time - ck0_time).count() << endl;
 
-	// Mat image1_color_copy; 
-	// Mat image2_color_copy;
-	// image1_color.copyTo(image1_color_copy); 
-	// image2_color.copyTo(image2_color_copy); 
-	// for (Point2f p : keypoints1) {
-	// 	circle(image1_color_copy, p, 1, CV_RGB(255, 0, 0), 3);
-	// }
-	// imshow("keypoints1", image1_color_copy);
-	// for (Point2f p : keypoints2) {
-	// 	circle(image2_color_copy, p, 1, CV_RGB(255, 0, 0), 3);
-	// }
-	// imshow("keypoints2", image2_color_copy);
+	Mat image1_color_copy; 
+	Mat image2_color_copy;
+	image1_color.copyTo(image1_color_copy); 
+	image2_color.copyTo(image2_color_copy); 
+	for (Point2f p : keypoints1) {
+		circle(image1_color_copy, p, 1, CV_RGB(255, 0, 0), 3);
+	}
+	imshow("keypoints1", image1_color_copy);
+	for (Point2f p : keypoints2) {
+		circle(image2_color_copy, p, 1, CV_RGB(255, 0, 0), 3);
+	}
+	imshow("keypoints2", image2_color_copy);
 
 	/* use lowe ratio to sift matches points */
 	vector<pair<int, int> > indexes;
@@ -79,13 +79,15 @@ int main(int argc, char *argv[]) {
 	auto ck3_time = Clock::now();
 	cout << "matcher time spent:" << chrono::duration_cast<dsec>(ck3_time - ck2_time).count() << endl;
 
-	// /* stitch the images */
+	/* warp the images */
 	Mat output;
-	warpPerspective(image1_color, output, self_Homo, Size(image1_color.size[1] + image2_color.size[1], image1_color.size[0]));
-	image2_color.copyTo(output.rowRange(0,image2_color.size[0]).colRange(0, image2_color.size[1]));
+	float ty = 100;
+	Mat A = Mat::eye(3,3,CV_32F); A.at<float>(1,2) = ty;
+	warpPerspective(image1_color, output, A*self_Homo, Size(image1_color.size[1] + image2_color.size[1], image1_color.size[0] + image2_color.size[0]));
+	image2_color.copyTo(output.rowRange(ty,image2_color.size[0]+ty).colRange(0, image2_color.size[1]));
 	imshow("p6", output);
 
-	waitKey(1);
+	waitKey(0);
 	cout << "total time spent:" << chrono::duration_cast<dsec>(Clock::now() - start_time).count() << endl;
 	cout << "computation time spent:" << chrono::duration_cast<dsec>(Clock::now() - ck0_time).count() << endl;
 	return 0;
