@@ -4,7 +4,7 @@ project(pps)
 set(CMAKE_CXX_STANDARD 11)
 find_package(OpenCV REQUIRED)
 find_package(OpenMP REQUIRED)
-
+find_package(CUDA 9.0 REQUIRED)
 
 # include_directories(util)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -15,3 +15,4 @@ set(PSS_SOURCE ${DIR_SRCS})
 add_executable(${PROJECT_NAME} ${PSS_SOURCE})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CUDA_LIBRARIES})

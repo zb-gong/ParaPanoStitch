@@ -332,16 +332,6 @@ void CalcDescriptor(float **dogs, int height, int width, vector<Point2f> &key, v
 	assert(key.size() == dog_index.size());
 	
 	descriptor = Mat(key.size(), 128, CV_32F);
-	// float filter[256];
-	// float sigma = 2;
-	// float scale = 100;
-	// for (int i = 0; i < 16; i++) {
-	// 	for (int j = 0; j < 16; j++) {
-	// 		int x = j - 8;
-	// 		int y = i - 8;
-	// 		filter[j + i * 8] = exp(-1.0 * (x * x + y * y) / (2 * sigma * sigma));
-	// 	}
-	// }
 	
 	#pragma omp parallel for num_threads(2) schedule(dynamic)
 	for (int i = 0; i < key.size(); i++) {
@@ -405,15 +395,13 @@ void BruteForceMacher(Mat &descritor1, Mat &descritor2, vector<pair<int, int>> &
 				curr_sec_dist = curr_min_dist;
 				curr_min_index = j;
 				curr_min_dist = curr_tmp_dist;
-			}
-			else if (curr_tmp_dist < curr_sec_dist) {
+			} else if (curr_tmp_dist < curr_sec_dist) {
 				curr_sec_dist = curr_tmp_dist;
 			}
 		}
 		if (curr_min_dist < ratio * curr_sec_dist) {
 			match_index[i] = curr_min_index;
-		}
-		else {
+		} else {
 			match_index[i] = -1;
 		}
 	}

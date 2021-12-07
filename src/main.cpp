@@ -2,7 +2,6 @@
 #include <vector>
 #include <chrono>
 #include <opencv2/opencv.hpp>
-#include <opencv2/xfeatures2d.hpp>
 #include <omp.h>
 #include <unistd.h>
 #include "util.h"
