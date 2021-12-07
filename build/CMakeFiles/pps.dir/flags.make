@@ -6,5 +6,5 @@ CXX_FLAGS =   -fopenmp -std=gnu++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /usr/local/include/opencv 
+CXX_INCLUDES = -I/usr/local/cuda/include -isystem /usr/local/include/opencv4 
 

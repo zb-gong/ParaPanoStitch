@@ -16,8 +16,8 @@ void CalcDescriptor(float **dogs, int height, int width,
                     vector<Point2f> &key, vector<int> &dog_index, Mat &descriptor);
 void detectKeyPoints(float *image, int height, int width,
 										 vector<Point2f> &keypoints, Mat &descriptor);
-void BruteForceMacher(Mat &descritor1, Mat &descritor2, 
-                      vector<pair<int, int>> &indexes, float ratio);
+void BruteForceMatcher(Mat &descritor1, Mat &descritor2, 
+                      vector<pair<int, int> > &indexes, float ratio);
 Mat CalcHomography(vector<Point2f> &key1, vector<Point2f> &key2, 
                    int iter = 2000, int thr = 10);
 

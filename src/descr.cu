@@ -68,20 +68,20 @@ void CalcDescriptorCUDA(float **dogs, int height, int width, int num_levels, vec
   float *key_y_cuda;
   cudaMalloc(&key_x_cuda, key_size * sizeof(float));
   cudaMalloc(&key_y_cuda, key_size * sizeof(float));
-  cudaMemcpy(key_x_cuda, key_x.data, key_size * sizeof(float), cudaMemcpyHostToDevice);
-  cudaMemcpy(key_y_cuda, key_y.data, key_size * sizeof(float), cudaMemcpyHostToDevice);
+  cudaMemcpy(key_x_cuda, key_x, key_size * sizeof(float), cudaMemcpyHostToDevice);
+  cudaMemcpy(key_y_cuda, key_y, key_size * sizeof(float), cudaMemcpyHostToDevice);
   delete[] key_x;
   delete[] key_y;
 
   int *dog_index_cuda;
   cudaMalloc(&dog_index_cuda, key_size * sizeof(int));
-  cudaMemcpy(dog_index_cuda, dog_index.data, key_size * sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(dog_index_cuda, dog_index.data(), key_size * sizeof(int), cudaMemcpyHostToDevice);
 
   float *dogs_1D = new float[height * width * (num_levels-1)];
   for (int i=0; i<num_levels-1; i++) {
     for (int j=0; j<height; j++) {
       for (int k=0; k<width; k++) {
-        dogs_1D[i*height*width + j*width + k] = dogs[i][j*width + k]
+        dogs_1D[i*height*width + j*width + k] = dogs[i][j*width + k];
       }
     }
   }
@@ -98,4 +98,9 @@ void CalcDescriptorCUDA(float **dogs, int height, int width, int num_levels, vec
   float *tmp_descr = new float[key_size * 128];
   cudaMemcpy(tmp_descr, descriptor_cuda, key_size * 128 * sizeof(float), cudaMemcpyDeviceToHost);
 	descriptor = Mat(key_size, 128, CV_32F, tmp_descr);
+  
+  cudaFree(key_x_cuda);
+  cudaFree(key_y_cuda);
+  cudaFree(dog_index_cuda);
+  cudaFree(dogs_cuda);
 }

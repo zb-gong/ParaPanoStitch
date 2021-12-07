@@ -6,6 +6,9 @@
 #include "util.h"
 
 int number_of_threads;
+void CalcDescriptorCUDA(float **dogs, int height, int width, int num_levels, vector<Point2f> &key, 
+                        vector<int> &dog_index, Mat &descriptor);
+float *ConvolveCUDA(float *image, float *filter, int height, int width, int filter_size);
 
 float *createFilter(int filter_size, float sigma)
 {
@@ -85,7 +88,8 @@ float **createGaussianPyramid(float *image, int height, int width, float k, floa
 		// https://stackoverflow.com/questions/3149279/optimal-sigma-for-gaussian-filtering-of-an-image
 		int filter_size = ceil(6 * sigma); // maybe constant 5x5 filter
 		float *filter = createFilter(filter_size, sigma); // not time consuming e^-5
-		gaussian_pyramid[i] = convolve(image, filter, height, width, filter_size); // time consuming 0.1;
+		// gaussian_pyramid[i] = convolve(image, filter, height, width, filter_size); // time consuming 0.1;
+		gaussian_pyramid[i] = ConvolveCUDA(image, filter, height, width, filter_size); // time consuming 0.1;
 		delete[] filter;
 	}
 	return gaussian_pyramid;
@@ -324,6 +328,7 @@ void detectKeyPoints(float *image, int height, int width,
 	for (int i = 0; i < num_levels - 1; i++)
     denormalize_img(dogs[i], height, width);
 	CalcDescriptor(dogs, height, width, keypoints, dog_index, descriptor);
+	// CalcDescriptorCUDA(dogs, height, width, num_levels, keypoints, dog_index, descriptor);
 	auto ck4_time = Clock::now();
 	cout << "calc descriptor time spent:" << chrono::duration_cast<dsec>(ck4_time - ck3_time).count() << endl;
 }
@@ -333,7 +338,7 @@ void CalcDescriptor(float **dogs, int height, int width, vector<Point2f> &key, v
 	
 	descriptor = Mat(key.size(), 128, CV_32F);
 	
-	#pragma omp parallel for num_threads(2) schedule(dynamic)
+	// #pragma omp parallel for num_threads(2) schedule(dynamic)
 	for (int i = 0; i < key.size(); i++) {
 		// #pragma omp parallel num_threads(2) 
 		// {
@@ -381,9 +386,9 @@ void CalcDescriptor(float **dogs, int height, int width, vector<Point2f> &key, v
 	}
 }
 
-void BruteForceMacher(Mat &descritor1, Mat &descritor2, vector<pair<int, int>> &indexes, float ratio) {
+void BruteForceMatcher(Mat &descritor1, Mat &descritor2, vector<pair<int, int> > &indexes, float ratio) {
 	vector<int> match_index(descritor1.rows);
-	#pragma omp parallel for schedule(dynamic) num_threads(2)
+	#pragma omp parallel for schedule(dynamic) num_threads(1)
 	for (int i = 0; i < descritor1.rows; i++) {
 		Mat d2, d1 = descritor1.row(i);
 		float curr_min_dist = MAX_DOUBLE - 1, curr_sec_dist = MAX_DOUBLE, curr_tmp_dist = MAX_DOUBLE;

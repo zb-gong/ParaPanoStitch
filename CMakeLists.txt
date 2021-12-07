@@ -8,11 +8,12 @@ find_package(CUDA 9.0 REQUIRED)
 
 # include_directories(util)
 include_directories(${OpenCV_INCLUDE_DIRS})
+include_directories(${CUDA_INCLUDE_DIRS})
 
 aux_source_directory(src DIR_SRCS)
 set(PSS_SOURCE ${DIR_SRCS})
 
-add_executable(${PROJECT_NAME} ${PSS_SOURCE})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${OpenCV_LIBS})
-target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CUDA_LIBRARIES})
+cuda_add_executable(${PROJECT_NAME} ${PSS_SOURCE})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
+target_link_libraries(${PROJECT_NAME} OpenMP::OpenMP_CXX)
+target_link_libraries(${PROJECT_NAME} ${CUDA_LIBRARIES})

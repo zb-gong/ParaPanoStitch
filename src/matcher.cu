@@ -14,8 +14,8 @@ __global__ void MatcherKernel(float *d1, float *d2, int *match_index, int N1, in
   int index = blockIdx.x * blockDim.x + threadIdx.x;
   if (index >= N1) {return;}
 
-  // __shared__ float *shared_d2 = new float[d2_size]; // (2500, 128)->1280KB maybe too large to fit in shared memory
-  // __shared__ float *shared_d1 = new float[d1_size]; // maybe no need, only read once 
+  // __shared__ float shared_d1[]; // maybe no need, only read once 
+  // __shared__ float shared_d2[]; // (2500, 128)->1280KB maybe too large to fit in shared memory
   // for (int i=0; i<d1_size; i++)
   //   shared_d1[i] = d1[i];
   // for (int i=0; i<d2_size; i++)
@@ -50,7 +50,7 @@ __global__ void MatcherKernel(float *d1, float *d2, int *match_index, int N1, in
 }
 
 
-void BruteForceMatcherCUDA(Mat &descritor1, Mat &descritor2, vector<pair<int, int>> &indexes, float ratio) {
+void BruteForceMatcherCUDA(Mat &descriptor1, Mat &descriptor2, vector<pair<int, int> > &indexes, float ratio) {
   int N1 = descriptor1.rows; // image 1 number of keypoints
   int N2 = descriptor2.rows; // image 2 number of keypoints 
   int *match_index_cuda;
@@ -58,12 +58,12 @@ void BruteForceMatcherCUDA(Mat &descritor1, Mat &descritor2, vector<pair<int, in
 
   float *descr1_pt = (float *)descriptor1.ptr<float>();
   float *descr1_cuda;
-  int descr1_size = N1 * decriptor1.cols;
+  int descr1_size = N1 * descriptor1.cols;
   cudaMalloc(&descr1_cuda, descr1_size * sizeof(float));
   cudaMemcpy(descr1_cuda, descr1_pt, descr1_size * sizeof(float), cudaMemcpyHostToDevice);
   float *descr2_pt = (float *)descriptor2.ptr<float>();
   float *descr2_cuda;
-  int descr2_size = N2 * decriptor2.cols;
+  int descr2_size = N2 * descriptor2.cols;
   cudaMalloc(&descr2_cuda, descr2_size * sizeof(float));
   cudaMemcpy(descr2_cuda, descr2_pt, descr2_size * sizeof(float), cudaMemcpyHostToDevice);
   
@@ -78,4 +78,7 @@ void BruteForceMatcherCUDA(Mat &descritor1, Mat &descritor2, vector<pair<int, in
 			indexes.push_back(pair<int, int>{i, match_index[i]});
 	}
   delete[] match_index;
+  cudaFree(match_index_cuda);
+  cudaFree(descr1_cuda);
+  cudaFree(descr2_cuda);
 }
