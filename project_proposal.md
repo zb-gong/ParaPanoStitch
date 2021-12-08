@@ -42,29 +42,29 @@ We will show the separate input images and stitched output images on a poster. I
 We will use C++ and a normal CPU for the sequential version. NVIDIA GPUs can be used for parallelization in GPU case and multi-core CPUs using OpenMP and OpenMPI are also considered. We are considering using PSC and GHC machines to carry out our project. We use these because we are familiar with them from our assignments.
 
 #### Schedule
-1. 11/3 - 11/7:
+1. 11/3 - 11/7:  
 Finish up research and background knowledge about panorama stitching;
 Understand most commonly used algorithms for each step;
 Begin sequential implementation.
-2. 11/8 - 11/14:
+2. 11/8 - 11/14:  
 Finish sequential implementation;
 Stretch: Begin parallelizing step 3.
-3. 11/15 - 11/21:
+3. 11/15 - 11/21:  
 Finish trying implementations of step 3 to speedup performance.
-4. 11/22 - 11/28:
+4. 11/22 - 11/28:  
 Submit project milestone report;
 Begin parallelizing step 2.
-5. 11/29 - 11/5:
+5. 11/29 - 11/5:  
 Finish parallelizing step 2;
 Create overall performance graphs;
 Stretch: find other places to speedup performance.
-6. 11/6 - 11/9:
+6. 11/6 - 11/9:  
 Tidy up code;
 Create poste;.
 Submit final project.
 
 #### Sources
-https://courses.engr.illinois.edu/cs498dwh/fa2010/lectures/Lecture%2017%20-%20Photo%20Stitching.pdf
-https://itzone.com.vn/en/article/image-stitching-the-algorithm-behind-the-panorama-technology/
-http://vision.stanford.edu/teaching/cs131_fall1718/files/07_DoG_SIFT.pdf
-https://towardsdatascience.com/image-panorama-stitching-with-opencv-2402bde6b46c
+https://courses.engr.illinois.edu/cs498dwh/fa2010/lectures/Lecture%2017%20-%20Photo%20Stitching.pdf  
+https://itzone.com.vn/en/article/image-stitching-the-algorithm-behind-the-panorama-technology    
+http://vision.stanford.edu/teaching/cs131_fall1718/files/07_DoG_SIFT.pdf  
+https://towardsdatascience.com/image-panorama-stitching-with-opencv-2402bde6b46c  
