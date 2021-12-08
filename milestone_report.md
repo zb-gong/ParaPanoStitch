@@ -9,11 +9,11 @@ We are going to parallelize the panorama stitching using partially overlapped im
 We created a sequential implementation using OpenCV functions. We are in the process of changing the sequential version with our own implementations of the functions. Below are our results:  
 Here are the original two images.  
 <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p1.png" width="45%" height="45%">  <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p2.png" width="45%" height="45%">  
-Here are the keypoints detected:
+Here are the keypoints detected:  
 <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p3.png" width="45%" height="45%">  <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p4.png" width="45%" height="45%">  
-Here are the matched descriptors:
+Here are the matched descriptors:  
 <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p5.png" width="70%" height="70%">  
-Here’s the resulting panorama:
+Here’s the resulting panorama:  
 <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p6.png" width="70%" height="70%">  
 
 #### Goal Analysis
