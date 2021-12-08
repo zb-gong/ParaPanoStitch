@@ -2,7 +2,7 @@
 
 Developed by Zibo Gong (zibog) and Ziying He (ziyingh)
 
-####  URL
+####  Homepage
 <https://zibog98.github.io/ParaPanoStitch/>  
 
 #### Summary
