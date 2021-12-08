@@ -10,7 +10,7 @@ We are going to parallelize the panorama stitching using two partially overlappe
 
 #### Background
 Panorama Stitching between two images consists of steps many of which are able to be done in parallel. We use the following image as an example of the process.
-![](1.png)
+<img src="1.jpg" alt="drawing" width="200"/>
 1. Detect Key Points:
 Key points are points of interest in the image. DoG is used to detect these key points.
 2. Extract Local Invariant Descriptors:
