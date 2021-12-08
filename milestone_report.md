@@ -8,7 +8,7 @@ We are going to parallelize the panorama stitching using partially overlapped im
 #### Progress
 We created a sequential implementation using OpenCV functions. We are in the process of changing the sequential version with our own implementations of the functions. Below are our results:  
 Here are the original two images.
-![](p1.png=250x250)![](p2.png)
+![](p1.png | | width=100)![](p2.png)
 Here are the keypoints detected:
 ![](p3.png)![](p4.png)
 Here are the matched descriptors:
