@@ -2,8 +2,7 @@
 
 Developed by Zibo Gong (zibog) and Ziying He (ziyingh)
 
-#### HomePage
-https://zibog98.github.io/ParaPanoStitch/
+#### [HomePage](https://zibog98.github.io/ParaPanoStitch/)
 
 #### Summary
 We are going to parallelize the panorama stitching using partially overlapped images on multi-core CPUs using OpenMP and on NVIDIA GPUs. We plan to take advantage of feature extractor like SIFT to implement this project.
