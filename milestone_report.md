@@ -8,13 +8,13 @@ We are going to parallelize the panorama stitching using partially overlapped im
 #### Progress
 We created a sequential implementation using OpenCV functions. We are in the process of changing the sequential version with our own implementations of the functions. Below are our results:  
 Here are the original two images.
-![](p1.png)
+![](p1.png)![](p2.png)
 Here are the keypoints detected:
-![](p2.png)
+![](p3.png)![](p4.png)
 Here are the matched descriptors:
-![](p3.png)
+![](p5.png)
 Here’s the resulting panorama:
-![](p4.png)
+![](p6.png)
 
 #### Goal Analysis
 We are doing well with respect to our goals. We believe we will still be able to produce our deliverables because we have now determined the specific places that needs to be parallized and understand the algorithm better to achieve better performance. Some nice to have would be to try out more ways for each step such as implementing both BRIEF and SIFT and comparing their performance. Our updated goals are:  
