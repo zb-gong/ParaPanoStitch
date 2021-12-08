@@ -43,24 +43,24 @@ We will use C++ and a normal CPU for the sequential version. NVIDIA GPUs can be 
 
 #### Schedule
 1. 11/3 - 11/7:  
-Finish up research and background knowledge about panorama stitching;
-Understand most commonly used algorithms for each step;
+Finish up research and background knowledge about panorama stitching;    
+Understand most commonly used algorithms for each step;   
 Begin sequential implementation.
 2. 11/8 - 11/14:  
-Finish sequential implementation;
+Finish sequential implementation;    
 Stretch: Begin parallelizing step 3.
 3. 11/15 - 11/21:  
-Finish trying implementations of step 3 to speedup performance.
+Finish trying implementations of step 3 to speedup performance.   
 4. 11/22 - 11/28:  
-Submit project milestone report;
+Submit project milestone report;   
 Begin parallelizing step 2.
 5. 11/29 - 11/5:  
-Finish parallelizing step 2;
-Create overall performance graphs;
-Stretch: find other places to speedup performance.
+Finish parallelizing step 2;   
+Create overall performance graphs;   
+Stretch: find other places to speedup performance.  
 6. 11/6 - 11/9:  
-Tidy up code;
-Create poste;.
+Tidy up code;  
+Create poste;   
 Submit final project.
 
 #### Sources
