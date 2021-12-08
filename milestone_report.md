@@ -8,13 +8,13 @@ We are going to parallelize the panorama stitching using partially overlapped im
 #### Progress
 We created a sequential implementation using OpenCV functions. We are in the process of changing the sequential version with our own implementations of the functions. Below are our results:  
 Here are the original two images.  
-<img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p1.png" width="50%" height="50%"><img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p2.png" width="50%" height="50%">
+<img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p1.png" width="50%" height="50%">  <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p2.png" width="50%" height="50%">
 Here are the keypoints detected:
-![](p3.png)![](p4.png)
+<img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p3.png" width="50%" height="50%">  <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p4.png" width="50%" height="50%">
 Here are the matched descriptors:
-![](p5.png)
+<img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p5.png" width="50%" height="50%">
 Here’s the resulting panorama:
-![](p6.png)
+<img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p6.png" width="50%" height="50%">
 
 #### Goal Analysis
 We are doing well with respect to our goals. We believe we will still be able to produce our deliverables because we have now determined the specific places that needs to be parallized and understand the algorithm better to achieve better performance. Some nice to have would be to try out more ways for each step such as implementing both BRIEF and SIFT and comparing their performance. Our updated goals are:  
