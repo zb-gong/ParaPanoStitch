@@ -10,20 +10,20 @@ We are going to parallelize the panorama stitching using two partially overlappe
 
 #### Background
 Panorama Stitching between two images consists of steps many of which are able to be done in parallel. We use the following image as an example of the process.
-<img src="https://raw.githubusercontent.com/zibog98/ParaPanoStitch/gh-pages/1.png" width="80%" height="80%">  
+<img src="https://raw.githubusercontent.com/zibog98/ParaPanoStitch/gh-pages/1.png" width="90%" height="90%">  
 1. Detect Key Points:
 Key points are points of interest in the image. DoG is used to detect these key points.
 2. Extract Local Invariant Descriptors:
 Local invariant descriptors characterizes image content into local feature coordinates. SIFT is mainly used for this step.
-![](2.png)
+<img src="https://raw.githubusercontent.com/zibog98/ParaPanoStitch/gh-pages/2.png" width="90%" height="90%">  
 3. Match Key Points and Descriptors:
 Match the key points between two images using their distance. A brute force or a nearest neighbor algorithm is typically used.
-![](3.png)
+<img src="https://raw.githubusercontent.com/zibog98/ParaPanoStitch/gh-pages/3.png" width="90%" height="90%">  
 4. Estimate Homography Matrix with RANSAC:
 Create a homography matrix that computes the alignment between the images. RANSAC is mainly used in this step.
 5. Project onto Surface and Blend Images:
 Project each image onto some surface and blend them together to create the final panorama.
-![](4.png)
+<img src="https://raw.githubusercontent.com/zibog98/ParaPanoStitch/gh-pages/4.png" width="90%" height="90%">  
 
 #### Challenge
 The traditional implementation of panorama stitching is multi-staged and the whole pipeline of panoramastitching is sequential executed so parallelizing the whole procedure seems very difficult. However intuitively, parallizing some partial stage of the whole procedure may be more practical; For example, for key points matching part we can do brute force matching and therefore we can easily parallel this part since those match searching is independent from each other. Starting from parallelizing these small computing parts, we are expected to be faced with more challenges to step into how to make the procedure more parallel. 
