@@ -3,14 +3,14 @@
 Developed by Zibo Gong (zibog) and Ziying He (ziyingh)
 
 ####  URL
-https://zibog98.github.io/ParaPanoStitch/
+[lable](https://zibog98.github.io/ParaPanoStitch/)
 
 #### Summary
 We are going to parallelize the panorama stitching using two partially overlapped images on multi-core CPUs using OpenMP and on NVIDIA GPUs using CUDA. We plan to take advantage of SIFT key points detector and feature extractor to implement this project.
 
 #### Background
 Panorama Stitching between two images consists of steps many of which are able to be done in parallel. We use the following image as an example of the process.
-<img src="1.jpg" width="200"/>
+![](2.png)
 1. Detect Key Points:
 Key points are points of interest in the image. DoG is used to detect these key points.
 2. Extract Local Invariant Descriptors:
@@ -64,7 +64,7 @@ Create poste;
 Submit final project.
 
 #### Sources
-https://courses.engr.illinois.edu/cs498dwh/fa2010/lectures/Lecture%2017%20-%20Photo%20Stitching.pdf  
-https://itzone.com.vn/en/article/image-stitching-the-algorithm-behind-the-panorama-technology    
-http://vision.stanford.edu/teaching/cs131_fall1718/files/07_DoG_SIFT.pdf  
-https://towardsdatascience.com/image-panorama-stitching-with-opencv-2402bde6b46c  
+[lable](https://courses.engr.illinois.edu/cs498dwh/fa2010/lectures/Lecture%2017%20-%20Photo%20Stitching.pdf)   
+[label](https://itzone.com.vn/en/article/image-stitching-the-algorithm-behind-the-panorama-technology)    
+[label](http://vision.stanford.edu/teaching/cs131_fall1718/files/07_DoG_SIFT.pdf)  
+[label](https://towardsdatascience.com/image-panorama-stitching-with-opencv-2402bde6b46c)  
