@@ -8,13 +8,13 @@ We are going to parallelize the panorama stitching using partially overlapped im
 #### Progress
 We created a sequential implementation using OpenCV functions. We are in the process of changing the sequential version with our own implementations of the functions. Below are our results:  
 Here are the original two images.  
-<img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p1.png" width="45%" height="45%">  <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p2.png" width="45%" height="45%">  
+<p align="center"><img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p1.png" width="40%" height="40%">  <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p2.png" width="40%" height="40%"></p>  
 Here are the keypoints detected:  
-<img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p3.png" width="45%" height="45%">  <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p4.png" width="45%" height="45%">  
+<p align="center"><img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p3.png" width="40%" height="40%">  <img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p4.png" width="40%" height="40%"></p>  
 Here are the matched descriptors:  
-<img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p5.png" width="70%" height="70%">  
+<p align="center"><img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p5.png" width="70%" height="70%"></p>  
 Here’s the resulting panorama:  
-<img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p6.png" width="70%" height="70%">  
+<p align="center"><img src="https://github.com/zibog98/ParaPanoStitch/blob/gh-pages/p6.png" width="70%" height="70%"></p>  
 
 #### Goal Analysis
 We are doing well with respect to our goals. We believe we will still be able to produce our deliverables because we have now determined the specific places that needs to be parallized and understand the algorithm better to achieve better performance. Some nice to have would be to try out more ways for each step such as implementing both BRIEF and SIFT and comparing their performance. Our updated goals are:  
