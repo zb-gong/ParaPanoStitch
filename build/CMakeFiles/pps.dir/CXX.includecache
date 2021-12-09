@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/main.cpp
+/jet/home/lilili/ParaPanoStitch/src/main.cpp
 iostream
 -
 vector
@@ -14,17 +14,15 @@ vector
 chrono
 -
 opencv2/opencv.hpp
--
-opencv2/xfeatures2d.hpp
 -
 omp.h
 -
 unistd.h
 -
 util.h
-/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/util.h
+/jet/home/lilili/ParaPanoStitch/src/util.h
 
-/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/util.cpp
+/jet/home/lilili/ParaPanoStitch/src/util.cpp
 iostream
 -
 vector
@@ -36,9 +34,9 @@ opencv2/opencv.hpp
 omp.h
 -
 util.h
-/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/util.h
+/jet/home/lilili/ParaPanoStitch/src/util.h
 
-/home/zibo/Class/15618_ParrallelComputing/ParaPanoStitch/src/util.h
+/jet/home/lilili/ParaPanoStitch/src/util.h
 chrono
 -
 vector

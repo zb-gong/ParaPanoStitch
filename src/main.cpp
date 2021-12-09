@@ -2,7 +2,7 @@
 #include <vector>
 #include <chrono>
 #include <opencv2/opencv.hpp>
-#include <opencv2/xfeatures2d.hpp>
+// #include <opencv2/xfeatures2d.hpp>
 #include <omp.h>
 #include <unistd.h>
 #include "util.h"
@@ -26,10 +26,10 @@ int main(int argc, char *argv[]) {
 	cout << "number of threads:" << number_of_threads << endl;
 
 	auto start_time = Clock::now();
-	Mat image1_color = imread("/home/zibo/Pictures/pic1.png", IMREAD_COLOR);
-	Mat image2_color = imread("/home/zibo/Pictures/pic3.png", IMREAD_COLOR);
-	Mat image1_gray = imread("/home/zibo/Pictures/pic1.png", IMREAD_GRAYSCALE);
-	Mat image2_gray = imread("/home/zibo/Pictures/pic3.png", IMREAD_GRAYSCALE);
+	Mat image1_color = imread("/jet/home/lilili/ParaPanoStitch/inputs/s2-right.png", IMREAD_COLOR);
+	Mat image2_color = imread("/jet/home/lilili/ParaPanoStitch/inputs/s2-left.png", IMREAD_COLOR);
+	Mat image1_gray = imread("/jet/home/lilili/ParaPanoStitch/inputs/s2-right.png", IMREAD_GRAYSCALE);
+	Mat image2_gray = imread("/jet/home/lilili/ParaPanoStitch/inputs/s2-left.png", IMREAD_GRAYSCALE);
 	Mat image1, image2;
 	image1_gray.convertTo(image1, CV_32F, 1.0 / 255, 0);
 	image2_gray.convertTo(image2, CV_32F, 1.0 / 255, 0);
@@ -53,11 +53,11 @@ int main(int argc, char *argv[]) {
 	for (Point2f p : keypoints1) {
 		circle(image1_color_copy, p, 1, CV_RGB(255, 0, 0), 3);
 	}
-	imshow("keypoints1", image1_color_copy);
+	// imshow("keypoints1", image1_color_copy);
 	for (Point2f p : keypoints2) {
 		circle(image2_color_copy, p, 1, CV_RGB(255, 0, 0), 3);
 	}
-	imshow("keypoints2", image2_color_copy);
+	// imshow("keypoints2", image2_color_copy);
 
 	/* use lowe ratio to sift matches points */
 	vector<pair<int, int> > indexes;
@@ -85,9 +85,9 @@ int main(int argc, char *argv[]) {
 	Mat A = Mat::eye(3,3,CV_32F); A.at<float>(1,2) = ty;
 	warpPerspective(image1_color, output, A*self_Homo, Size(image1_color.size[1] + image2_color.size[1], image1_color.size[0] + image2_color.size[0]));
 	image2_color.copyTo(output.rowRange(ty,image2_color.size[0]+ty).colRange(0, image2_color.size[1]));
-	imshow("p6", output);
+	imwrite("res.jpg", output);
 
-	waitKey(0);
+	// waitKey(0);
 	cout << "total time spent:" << chrono::duration_cast<dsec>(Clock::now() - start_time).count() << endl;
 	cout << "computation time spent:" << chrono::duration_cast<dsec>(Clock::now() - ck0_time).count() << endl;
 	return 0;

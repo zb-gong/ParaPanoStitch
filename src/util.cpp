@@ -16,7 +16,7 @@ float *createFilter(int filter_size, float sigma)
 	float div = 1.0 / (2 * M_PI * sigma * sigma);
 
 	// make Guassian filter
-	#pragma omp parallel for collapse(2) num_threads(2) reduction(+:sum)
+	#pragma omp parallel for collapse(2) num_threads(128) reduction(+:sum)
 	for (int i = 0; i < filter_size; i++)
 	{
 		for (int j = 0; j < filter_size; j++)
@@ -29,7 +29,7 @@ float *createFilter(int filter_size, float sigma)
 	}
 
 	// normalize
-	#pragma omp parallel for collapse(2) num_threads(2)
+	#pragma omp parallel for collapse(2) num_threads(128)
 	for (int i = 0; i < filter_size; i++)
 	{
 		for (int j = 0; j < filter_size; j++)
@@ -46,7 +46,7 @@ float *convolve(float *image, float *filter, int height, int width, int filter_s
 	int h_mid = filter_size / 2;
 	int w_mid = filter_size / 2;
 
-	#pragma omp parallel for collapse(2) num_threads(2)
+	#pragma omp parallel for collapse(2) num_threads(128)
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			float sum = 0.0;
@@ -78,7 +78,7 @@ float **createGaussianPyramid(float *image, int height, int width, float k, floa
 	float **gaussian_pyramid = new float *[num_levels];
 
 	// omp_set_nested(1);
-	// #pragma omp parallel for num_threads(2)
+	// #pragma omp parallel for num_threads(128)
 	for (int i = 0; i < num_levels; i++)
 	{
 		float sigma = sigma_0 * pow(k, levels[i]);
@@ -100,7 +100,7 @@ float **doDoG(float **gaussian_pyramid, int height, int width, int num_levels) {
 		float *g_0 = gaussian_pyramid[i];
 		float *g_1 = gaussian_pyramid[i + 1];
  
-		#pragma omp parallel for collapse(2) num_threads(2)
+		#pragma omp parallel for collapse(2) num_threads(128)
 		for (int ii = 0; ii < height; ii++) {
 			for (int jj = 0; jj < width; jj++) {
 				dog[jj + ii * width] = g_1[jj + ii * width] - g_0[jj + ii * width];
@@ -131,7 +131,7 @@ bool isLocalMinMax(float *curr_dog, float *prev_dog, float *next_dog, int i, int
 	bool local_min = true;
 
 	int fi, fj;
-	// #pragma omp parallel for collapse(2) num_threads(2)
+	// #pragma omp parallel for collapse(2) num_threads(128)
 	for (fi = -size; fi <= size; fi++)
 	{
 		for (fj = -size; fj <= size; fj++)
@@ -255,7 +255,7 @@ void getLocalExtrema(float **dog, int height, int width, int num_levels, vector<
 		vector<int> tmp_keypoints(height * width, -1); // bool will lead to error
 		vector<int> tmp_dog_index(height * width, -1);
 		// omp_set_nested(1);
-		#pragma omp parallel for collapse(2) num_threads(2) schedule(static)
+		#pragma omp parallel for collapse(2) num_threads(128) schedule(static)
 		for (int i = 0; i < height; i++)
 		{
 			for (int j = 0; j < width; j++)
@@ -343,9 +343,9 @@ void CalcDescriptor(float **dogs, int height, int width, vector<Point2f> &key, v
 	// 	}
 	// }
 	
-	#pragma omp parallel for num_threads(2) schedule(dynamic)
+	#pragma omp parallel for num_threads(128) schedule(dynamic)
 	for (int i = 0; i < key.size(); i++) {
-		// #pragma omp parallel num_threads(2) 
+		// #pragma omp parallel num_threads(128) 
 		// {
 		/* init */
 		float hist[16][8];
@@ -390,26 +390,32 @@ void CalcDescriptor(float **dogs, int height, int width, vector<Point2f> &key, v
 		// }
 	}
 }
-
 void BruteForceMacher(Mat &descritor1, Mat &descritor2, vector<pair<int, int>> &indexes, float ratio) {
 	vector<int> match_index(descritor1.rows);
-	#pragma omp parallel for schedule(dynamic) num_threads(2)
+	float *d1 = (float *)descritor1.ptr<float>();
+	float *d2 = (float *)descritor2.ptr<float>();
+
+	// omp_set_nested(1);
+	#pragma omp parallel for schedule(static) num_threads(128)
 	for (int i = 0; i < descritor1.rows; i++) {
-		Mat d2, d1 = descritor1.row(i);
-		float curr_min_dist = MAX_DOUBLE - 1, curr_sec_dist = MAX_DOUBLE, curr_tmp_dist = MAX_DOUBLE;
-		int curr_min_index;
+		float *curr_d1 = d1+i*128;
+		vector<float> curr_tmp_dist(descritor2.rows, 0);
+		// #pragma omp parallel for num_threads(128)
 		for (int j = 0; j < descritor2.rows; j++) {
-			d2 = descritor2.row(j);
-			curr_tmp_dist = norm(d1 - d2, NORM_L2);
-			if (curr_tmp_dist < curr_min_dist) {
-				curr_sec_dist = curr_min_dist;
-				curr_min_index = j;
-				curr_min_dist = curr_tmp_dist;
-			}
-			else if (curr_tmp_dist < curr_sec_dist) {
-				curr_sec_dist = curr_tmp_dist;
+			float *curr_d2 = d2+j*128;
+			for (int k=0; k<128; k++) {
+				curr_tmp_dist[j] += sqrt((*(curr_d1+k) - *(curr_d2+k)) * (*(curr_d1+k) - *(curr_d2+k)));
 			}
 		}
+
+		auto curr_min_pt = min_element(curr_tmp_dist.begin(), curr_tmp_dist.end());
+		float curr_min_dist = *curr_min_pt;
+		int curr_min_index = curr_min_pt - curr_tmp_dist.begin();
+
+		curr_tmp_dist.erase(curr_min_pt, curr_min_pt+1);
+		auto curr_sec_pt = min_element(curr_tmp_dist.begin(), curr_tmp_dist.end());
+		float curr_sec_dist = *curr_sec_pt;
+
 		if (curr_min_dist < ratio * curr_sec_dist) {
 			match_index[i] = curr_min_index;
 		}
@@ -433,7 +439,7 @@ Mat CalcHomography(vector<Point2f> &key1, vector<Point2f> &key2, int iter, int t
 	int keypoints_size = key1.size();
 	cout << "keypoints size" << keypoints_size << endl;
 
-	#pragma omp parallel num_threads(2)
+	#pragma omp parallel num_threads(128)
 	{
 		unsigned int seed = 25234 + 17 * omp_get_thread_num();
 		#pragma omp for schedule(static)

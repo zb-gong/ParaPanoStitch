@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/pps.dir/src/main.cpp.o"
   "CMakeFiles/pps.dir/src/util.cpp.o"
-  "pps"
   "pps.pdb"
+  "pps"
 )
 
 # Per-language clean rules from dependency scanning.
