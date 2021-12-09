@@ -13,6 +13,7 @@ using namespace cv;
 __global__ void ConvolveKernel(float *image, int height, int width, float *cudaFilter, int filter_size, float *cudaGauss) {
   int col = threadIdx.x + blockIdx.x * blockDim.x;
   int row = threadIdx.y + blockIdx.y * blockDim.y;
+  if (col >= width || row >= height) {return;}
 
   float sum = 0.0;
   int h_mid = filter_size / 2;
@@ -35,49 +36,6 @@ __global__ void ConvolveKernel(float *image, int height, int width, float *cudaF
   }
 }
 
-// // Creates num_levels gaussian pyramids
-// float **createGaussianPyramidCUDA(float *image, int height, int width, float k, float sigma_0, int num_levels, vector<int> levels) {
-//   float **gaussian_pyramid = new float *[num_levels];
-//   /*for (int i = 0; i < num_levels; i++) {
-//         gaussian_pyramid[i] = new float[height * width];
-//   }*/
-
-//   float *cudaGauss;
-//   cudaMalloc(&cudaGauss, sizeof(float) * height * width);
-
-//   float *cudaImage; // device
-//   cudaMalloc(&cudaImage, sizeof(float) * height * width);
-//   cudaMemcpy(cudaImage, image, sizeof(float) * height * width, cudaMemcpyHostToDevice);
-  
-//   for (int i = 0; i < num_levels; i++) {
-//     float sigma = sigma_0 * pow(k, levels[i]);
-//     int filter_size = ceil(6 * sigma);
-//     float* filter = createFilter(filter_size, sigma);
-
-//     // device filter
-//     float *cudaFilter;
-//     cudaMalloc(&cudaFilter, sizeof(float) * filter_size * filter_size);
-//     cudaMemcpy(cudaFilter, filter, sizeof(float) * filter_size * filter_size,
-//                 cudaMemcpyHostToDevice);
-
-//     // separate image into blocks
-//     // NOTE: may need to tweak BLOCK_WIDTH & BLOCK_HEIGHT
-//     dim3 gridDim(width / BLOCK_WIDTH, height / BLOCK_HEIGHT);
-//     dim3 blockDim(BLOCK_WIDTH, BLOCK_HEIGHT);
-//     convolveCUDA<<<gridDim, blockDim>>>(cudaImage, height, width, cudaFilter, filter_size, cudaGauss);
-
-//     // Moves level i's gaussian res from device to host
-//     cudaMemcpy(gaussian_pyramid[i], cudaGauss, sizeof(float) * width * height, cudaMemcpyDeviceToHost);
-
-//     delete[] filter;
-//     cudaFree(cudaFilter);
-//   }    
-//   cudaFree(cudaGauss);
-//   cudaFree(cudaImage);
-
-//   return gaussian_pyramid;
-// }
-
 float *ConvolveCUDA(float *image, float *filter, int height, int width, int filter_size) {
   float *image_cuda;
   cudaMalloc(&image_cuda, sizeof(float) * height * width);
@@ -90,7 +48,7 @@ float *ConvolveCUDA(float *image, float *filter, int height, int width, int filt
   float *gaussian_cuda;
   cudaMalloc(&gaussian_cuda, sizeof(float) * height * width);
 
-  dim3 gridDim(width / BLOCK_WIDTH, height / BLOCK_HEIGHT);
+  dim3 gridDim((width + BLOCK_WIDTH - 1) / BLOCK_WIDTH, (height + BLOCK_HEIGHT - 1)/ BLOCK_HEIGHT);
   dim3 blockDim(BLOCK_WIDTH, BLOCK_HEIGHT);
   ConvolveKernel<<<gridDim, blockDim>>>(image_cuda, height, width, filter_cuda, filter_size, gaussian_cuda);
 

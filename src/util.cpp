@@ -9,6 +9,8 @@ int number_of_threads;
 void CalcDescriptorCUDA(float **dogs, int height, int width, int num_levels, vector<Point2f> &key, 
                         vector<int> &dog_index, Mat &descriptor);
 float *ConvolveCUDA(float *image, float *filter, int height, int width, int filter_size);
+float **DodogCUDA(float **guassian, int height, int width, int num_levels);
+void GetLocalExtremaCUDA(float **dog, int height, int width, int num_levels, vector<Point2f> &keypoints, vector<int> &dog_index, float contrast_thresh, int edge_thresh);
 
 float *createFilter(int filter_size, float sigma)
 {
@@ -19,7 +21,7 @@ float *createFilter(int filter_size, float sigma)
 	float div = 1.0 / (2 * M_PI * sigma * sigma);
 
 	// make Guassian filter
-	#pragma omp parallel for collapse(2) num_threads(2) reduction(+:sum)
+	#pragma omp parallel for collapse(2) num_threads(1) reduction(+:sum)
 	for (int i = 0; i < filter_size; i++)
 	{
 		for (int j = 0; j < filter_size; j++)
@@ -32,7 +34,7 @@ float *createFilter(int filter_size, float sigma)
 	}
 
 	// normalize
-	#pragma omp parallel for collapse(2) num_threads(2)
+	#pragma omp parallel for collapse(2) num_threads(1)
 	for (int i = 0; i < filter_size; i++)
 	{
 		for (int j = 0; j < filter_size; j++)
@@ -49,7 +51,7 @@ float *convolve(float *image, float *filter, int height, int width, int filter_s
 	int h_mid = filter_size / 2;
 	int w_mid = filter_size / 2;
 
-	#pragma omp parallel for collapse(2) num_threads(2)
+	#pragma omp parallel for collapse(2) num_threads(1)
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			float sum = 0.0;
@@ -76,20 +78,23 @@ float *convolve(float *image, float *filter, int height, int width, int filter_s
 // https://www.cs.toronto.edu/~mangas/teaching/320/slides/CSC320L10.pdf
 // https://medium.com/analytics-vidhya/a-beginners-guide-to-computer-vision-part-4-pyramid-3640edeffb00
 // https://www.cs.utexas.edu/~grauman/courses/fall2009/papers/local_features_synthesis_draft.pdf
-float **createGaussianPyramid(float *image, int height, int width, float k, float sigma_0, int num_levels, vector<int> levels)
+float **createGaussianPyramid(float *image, int height, int width, float k, float sigma_0, 
+                              int num_levels, vector<int> levels, bool cuda_flag)
 {
 	float **gaussian_pyramid = new float *[num_levels];
 
 	// omp_set_nested(1);
-	// #pragma omp parallel for num_threads(2)
+	// #pragma omp parallel for num_threads(1)
 	for (int i = 0; i < num_levels; i++)
 	{
 		float sigma = sigma_0 * pow(k, levels[i]);
 		// https://stackoverflow.com/questions/3149279/optimal-sigma-for-gaussian-filtering-of-an-image
 		int filter_size = ceil(6 * sigma); // maybe constant 5x5 filter
 		float *filter = createFilter(filter_size, sigma); // not time consuming e^-5
-		// gaussian_pyramid[i] = convolve(image, filter, height, width, filter_size); // time consuming 0.1;
-		gaussian_pyramid[i] = ConvolveCUDA(image, filter, height, width, filter_size); // time consuming 0.1;
+		if (cuda_flag)
+			gaussian_pyramid[i] = ConvolveCUDA(image, filter, height, width, filter_size); // time consuming 0.1;
+		else
+			gaussian_pyramid[i] = convolve(image, filter, height, width, filter_size); // time consuming 0.1;
 		delete[] filter;
 	}
 	return gaussian_pyramid;
@@ -104,7 +109,7 @@ float **doDoG(float **gaussian_pyramid, int height, int width, int num_levels) {
 		float *g_0 = gaussian_pyramid[i];
 		float *g_1 = gaussian_pyramid[i + 1];
  
-		#pragma omp parallel for collapse(2) num_threads(2)
+		#pragma omp parallel for collapse(2) num_threads(1)
 		for (int ii = 0; ii < height; ii++) {
 			for (int jj = 0; jj < width; jj++) {
 				dog[jj + ii * width] = g_1[jj + ii * width] - g_0[jj + ii * width];
@@ -297,7 +302,7 @@ void getLocalExtrema(float **dog, int height, int width, int num_levels, vector<
 }
 
 void detectKeyPoints(float *image, int height, int width,
-										 vector<Point2f> &keypoints, Mat &descriptor)
+										 vector<Point2f> &keypoints, Mat &descriptor, bool cuda_flag)
 {
 	// create Guassian pyramid
 	float k = sqrt(2);
@@ -305,12 +310,13 @@ void detectKeyPoints(float *image, int height, int width,
 	int num_levels = 5;
 	vector<int> levels = {-1, 0, 1, 2, 3};
 	auto ck0_time = Clock::now();
-	float **gaussian_pyramid = createGaussianPyramid(image, height, width, k,
-																									 sigma_0, num_levels, levels);
+	float **gaussian_pyramid = createGaussianPyramid(image, height, width, k, sigma_0, 
+	                                                 num_levels, levels, cuda_flag);
 	auto ck1_time = Clock::now();
 	cout << "gaussian create time spent:" << chrono::duration_cast<dsec>(ck1_time - ck0_time).count() << endl;
 
 	float **dogs = doDoG(gaussian_pyramid, height, width, num_levels);
+	// float **dogs = DodogCUDA(gaussian_pyramid, height, width, num_levels);
 	auto ck2_time = Clock::now();
 	cout << "dog create time spent:" << chrono::duration_cast<dsec>(ck2_time - ck1_time).count() << endl;
 
@@ -318,7 +324,10 @@ void detectKeyPoints(float *image, int height, int width,
 	float contrast_thresh = 0.03;
 	int edge_thresh = 10;
 	vector<int> dog_index;
-	getLocalExtrema(dogs, height, width, num_levels, keypoints, dog_index, contrast_thresh, edge_thresh);
+	if (cuda_flag)
+		GetLocalExtremaCUDA(dogs, height, width, num_levels, keypoints, dog_index, contrast_thresh, edge_thresh);
+	else
+		getLocalExtrema(dogs, height, width, num_levels, keypoints, dog_index, contrast_thresh, edge_thresh);
 	printf("num keypoints detected: %lu \n", keypoints.size());
 	auto ck3_time = Clock::now();
 	cout << "get local extrema time spent:" << chrono::duration_cast<dsec>(ck3_time - ck2_time).count() << endl;
@@ -327,8 +336,10 @@ void detectKeyPoints(float *image, int height, int width,
 	// get descriptor
 	for (int i = 0; i < num_levels - 1; i++)
     denormalize_img(dogs[i], height, width);
-	CalcDescriptor(dogs, height, width, keypoints, dog_index, descriptor);
-	// CalcDescriptorCUDA(dogs, height, width, num_levels, keypoints, dog_index, descriptor);
+	if (cuda_flag)
+		CalcDescriptorCUDA(dogs, height, width, num_levels, keypoints, dog_index, descriptor);
+	else 
+		CalcDescriptor(dogs, height, width, keypoints, dog_index, descriptor);
 	auto ck4_time = Clock::now();
 	cout << "calc descriptor time spent:" << chrono::duration_cast<dsec>(ck4_time - ck3_time).count() << endl;
 }
@@ -338,7 +349,7 @@ void CalcDescriptor(float **dogs, int height, int width, vector<Point2f> &key, v
 	
 	descriptor = Mat(key.size(), 128, CV_32F);
 	
-	// #pragma omp parallel for num_threads(2) schedule(dynamic)
+	#pragma omp parallel for num_threads(1) schedule(dynamic)
 	for (int i = 0; i < key.size(); i++) {
 		// #pragma omp parallel num_threads(2) 
 		// {
@@ -353,7 +364,7 @@ void CalcDescriptor(float **dogs, int height, int width, vector<Point2f> &key, v
 		int curr_x = key[i].x;
 		int curr_y = key[i].y;
 		
-		// #pragma omp for collapse(2) schedule(dynamicy)
+		// #pragma omp for collapse(2) schedule(dynamic)
 		for (int c = curr_y - 8; c <= curr_y + 7; c++) {
 			for (int r = curr_x - 8; r <= curr_x + 7; r++) {
 				if ((r - curr_x) * (r - curr_x) + (c - curr_y) * (c - curr_y) > 64) // maybe need adjust
@@ -374,8 +385,6 @@ void CalcDescriptor(float **dogs, int height, int width, vector<Point2f> &key, v
 				loc_y /= 4;
 				post_index = loc_y * 4 + loc_x;
 				hist[post_index][orient_index] += magnitude;
-				// cout << "dx:" << dx << "dy:" << dy << "magnitude:" << magnitude << "orient:" << orient << endl;
-				// cout << "post_index:" << post_index << "orient_index:" << orient_index << "hist:" << hist[post_index][orient_index] << endl;
 			}
 		}
 		Mat tmp(1, 128, CV_32F);
@@ -426,7 +435,7 @@ Mat CalcHomography(vector<Point2f> &key1, vector<Point2f> &key2, int iter, int t
 	int keypoints_size = key1.size();
 	cout << "keypoints size" << keypoints_size << endl;
 
-	#pragma omp parallel num_threads(2)
+	#pragma omp parallel num_threads(1)
 	{
 		unsigned int seed = 25234 + 17 * omp_get_thread_num();
 		#pragma omp for schedule(static)

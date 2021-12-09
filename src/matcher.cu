@@ -24,7 +24,6 @@ __global__ void MatcherKernel(float *d1, float *d2, int *match_index, int N1, in
   float *curr_d1 = d1 + index * DESCR_LEN;
   float *curr_d2;
   
-
   float curr_min_dist = FLOAT_MAX-1, curr_sec_dist = FLOAT_MAX, curr_tmp_dist = 0;
   int curr_min_index;
   for (int i = 0; i < N2; i++) {
