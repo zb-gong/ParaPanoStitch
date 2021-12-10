@@ -68,11 +68,7 @@ float *convolve(float *image, float *filter, int height, int width, int filter_s
 	return res;
 }
 
-// http://www.cse.psu.edu/~rtc12/CSE486/lecture10.pdf
-// https://www.cs.utah.edu/~srikumar/cv_spring2017_files/Keypoints&Descriptors.pdf
-// https://www.cs.toronto.edu/~mangas/teaching/320/slides/CSC320L10.pdf
-// https://medium.com/analytics-vidhya/a-beginners-guide-to-computer-vision-part-4-pyramid-3640edeffb00
-// https://www.cs.utexas.edu/~grauman/courses/fall2009/papers/local_features_synthesis_draft.pdf
+
 float **createGaussianPyramid(float *image, int height, int width, float k, float sigma_0, int num_levels, vector<int> levels)
 {
 	float **gaussian_pyramid = new float *[num_levels];
@@ -82,7 +78,6 @@ float **createGaussianPyramid(float *image, int height, int width, float k, floa
 	for (int i = 0; i < num_levels; i++)
 	{
 		float sigma = sigma_0 * pow(k, levels[i]);
-		// https://stackoverflow.com/questions/3149279/optimal-sigma-for-gaussian-filtering-of-an-image
 		int filter_size = ceil(6 * sigma); // maybe constant 5x5 filter
 		float *filter = createFilter(filter_size, sigma); // not time consuming e^-5
 		gaussian_pyramid[i] = convolve(image, filter, height, width, filter_size); // time consuming 0.1;
@@ -332,22 +327,9 @@ void CalcDescriptor(float **dogs, int height, int width, vector<Point2f> &key, v
 	assert(key.size() == dog_index.size());
 	
 	descriptor = Mat(key.size(), 128, CV_32F);
-	// float filter[256];
-	// float sigma = 2;
-	// float scale = 100;
-	// for (int i = 0; i < 16; i++) {
-	// 	for (int j = 0; j < 16; j++) {
-	// 		int x = j - 8;
-	// 		int y = i - 8;
-	// 		filter[j + i * 8] = exp(-1.0 * (x * x + y * y) / (2 * sigma * sigma));
-	// 	}
-	// }
-	
+
 	#pragma omp parallel for num_threads(128) schedule(dynamic)
 	for (int i = 0; i < key.size(); i++) {
-		// #pragma omp parallel num_threads(128) 
-		// {
-		/* init */
 		float hist[16][8];
 		memset(hist, 0, sizeof(hist));
 		int post_index = 0, orient_index = 0, loc_x = 0, loc_y = 0;
@@ -379,15 +361,11 @@ void CalcDescriptor(float **dogs, int height, int width, vector<Point2f> &key, v
 				loc_y /= 4;
 				post_index = loc_y * 4 + loc_x;
 				hist[post_index][orient_index] += magnitude;
-				// cout << "dx:" << dx << "dy:" << dy << "magnitude:" << magnitude << "orient:" << orient << endl;
-				// cout << "post_index:" << post_index << "orient_index:" << orient_index << "hist:" << hist[post_index][orient_index] << endl;
 			}
 		}
 		Mat tmp(1, 128, CV_32F);
 		memcpy(tmp.data, hist, sizeof(hist));
 		tmp.copyTo(descriptor.row(i));
-		// cout <<"descripter" << i << ":" << tmp << endl;
-		// }
 	}
 }
 void BruteForceMacher(Mat &descritor1, Mat &descritor2, vector<pair<int, int>> &indexes, float ratio) {
@@ -430,7 +408,6 @@ void BruteForceMacher(Mat &descritor1, Mat &descritor2, vector<pair<int, int>> &
 	}
 }
 
-// reference:http://6.869.csail.mit.edu/fa12/lectures/lecture13ransac/lecture13ransac.pdf
 Mat CalcHomography(vector<Point2f> &key1, vector<Point2f> &key2, int iter, int thr) {
 	assert(key1.size() == key2.size());
 
