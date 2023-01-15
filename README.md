@@ -1,2 +1,2 @@
 # Parallel_PanoramaStitch
-https://zibog98.github.io/ParaPanoStitch/
+https://zb-gong.github.io/ParaPanoStitch/
